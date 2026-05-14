@@ -1,0 +1,39 @@
+@import "tailwindcss";
+@import "daisyui/daisyui.css";
+
+@import url('https://fonts.googleapis.com/css2?family=Urbanist:ital,wght@0,100..900;1,100..900&display=swap');
+
+
+/* @plugin "daisyui/theme" {
+  name: "mytheme";
+  default: true;
+  color-scheme: light;
+  --color-primary: #570df8;
+  --color-secondary: #f000b8;
+  --color-accent: #1dcdbc;
+  --color-neutral: #2b3440;
+  --color-base-100: #ffffff;
+} */
+
+[data-theme="light"] {
+  --color-primary: #CAEB66;
+  --color-base-100: #DADADA;
+  --color-secondary: #33929D;
+  --color-accent: #03373D;
+  --color-neutral: #606060;
+}
+
+[data-theme="dark"] {
+  --color-primary: #CAEB66;
+  --color-base-100: #1d232a;
+  --color-secondary: #33929D;
+  --color-accent: #03373D;
+  --color-neutral: #606060;
+
+}
+
+body{
+  font-family: "Urbanist", sans-serif;
+  font-optical-sizing: auto;
+  font-style: normal;
+}
