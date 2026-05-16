@@ -2,21 +2,64 @@
 
 import { useForm } from "react-hook-form";
 import useAuth from "../../../Hookes/useAuth";
-import { Link } from "react-router";
+import { Link, useLocation, useNavigate } from "react-router";
 import SocialLogin from "../SocialLogin/SocialLogin";
+import axios from "axios";
+// import { updateProfile } from "firebase/auth";
+
 
 const Register = () => {
     
     const { register, handleSubmit, formState:{ errors } } = useForm();
-    const {registerUser} = useAuth();
+    const {registerUser, updateUserProfile} = useAuth();
+    const location = useLocation();
+    const navigate = useNavigate();
 
     const handleregistration = (data) =>{
-          console.log('after register', data);
+          console.log('after register', data.photo[0]);
+
+
+          const profileImg = data.photo[0];
+
           registerUser(data.email, data.password)
           .then(result=>{
             console.log(result.user);
             // store the image and get the photo url 
+            const formData = new FormData();
+            formData.append('image', profileImg);
             
+            const image_API_URL = `https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_image_host_key}`
+            axios.post(image_API_URL, formData)
+            .then(res =>{
+                console.log('after image upload', res.data.data.url)
+                // update user profile
+
+                const userProfile = {
+                    displayName : Date.name,
+                    photoUrl : res.data.data.url
+                }
+                updateUserProfile(userProfile)
+                .then( ()=>{
+                     console.log('profile uploaded successfully')
+                     navigate(location.state || '/');
+                    }
+                )
+                .catch(error => console.log(error))
+
+                
+
+                // const photoURL = res.data.data.url;
+                // console.log('AFTER upload data', photoURL);
+                // updateProfile(result.user, {
+                //     displayName: data.name,
+                //     photoURL:photoURL
+                // })
+                // .then(()=>{
+                //     console.log('profile uploaded successfully')
+                // })
+            })
+            // https://i.ibb.co/VWWbwm7j/Whats-App-Image-2026-05-14-at-11-34-36-PM.jpg
+            // https://i.ibb.co/spHQ3JJX/images.jpg
             // update user profile
           })
           .catch(error =>{
@@ -78,7 +121,9 @@ const Register = () => {
                             passwor must have at least one upercase, at least one lowercase, <br /> at least one number and one special characters
                         </p>
                     }
-                    <div><p>Already have a account? please <Link to="/login" className="text-blue-400">
+                    <div><p>Already have a account? please <Link
+                    state={location.state}
+                     to="/login" className="text-blue-400">
                     Login</Link>  </p></div>
                     <button className="btn btn-neutral mt-4">Register</button>
                 </fieldset>
