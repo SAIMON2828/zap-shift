@@ -60,7 +60,7 @@ const SendParcel = () => {
         }
 
         console.log('Cost : ', cost);
-
+        data.cost = cost;
 
         Swal.fire({
             title: "Agree with the cost?",
