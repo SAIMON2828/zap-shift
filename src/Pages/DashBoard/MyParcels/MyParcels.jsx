@@ -6,6 +6,7 @@ import useAxiosSecur from "../../../Hookes/useAxiosSecur";
 import { FaRegEdit } from "react-icons/fa";
 import { FaMagnifyingGlass, FaTrashCan } from "react-icons/fa6";
 import Swal from "sweetalert2";
+import { Link } from "react-router";
 
 const MyParcels = () => {
 
@@ -49,6 +50,17 @@ const MyParcels = () => {
 
         });
     }
+
+    const handlePayment = async(parcel) =>{
+          const paymentInfo = {
+            cost: parcel.cost,
+            parcelId: parcel._id,
+            senderEmail: parcel.senderEmail,
+            parcelName: parcel.parcelName
+          }
+          const res = await axiosSecure.post('/payment-checkout-session', paymentInfo);
+          window.location.href = res.data.url;
+    }
     return (
         <div>
             <h1>My Parcels : {parcels.length}</h1>
@@ -60,9 +72,11 @@ const MyParcels = () => {
                             <th></th>
                             <th>Name</th>
                             <th>Type</th>
-                            <th>Receiver Name</th>
-                            <th>Price</th>
+                            <th>Parcel Name</th>
+                            <th>Cost</th>
                             <th>Actions</th>
+                            <th>Payments</th>
+                            <th>Delivery Status</th>
 
                         </tr>
                     </thead>
@@ -72,7 +86,7 @@ const MyParcels = () => {
                                 <th>{index + 1}</th>
                                 <td>{parcel.senderName}</td>
                                 <td>{parcel.parcelType}</td>
-                                <td>{parcel.receiverName}</td>
+                                <td>{parcel.parcelName}</td>
                                 <td>{parcel.cost}</td>
                                 <td>
                                     <div className="tooltip">
@@ -103,6 +117,17 @@ const MyParcels = () => {
                                         </button>
                                     </div>
                                 </td>
+                                <td>
+                                    {
+                                      parcel.paymentStatus ==='paid'? 
+                                      <span className="text-green-500">Paid</span>
+                                      :
+                                    
+                                      <button onClick={()=>handlePayment(parcel)} className="btn hover:bg-purple-600"> Pay </button>
+                                     
+                                    }
+                                </td>
+                                <td>{parcel.receiverName}</td>
 
                             </tr>)
                         }
