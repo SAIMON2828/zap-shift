@@ -6,7 +6,7 @@ import useAxiosSecur from "../../../Hookes/useAxiosSecur";
 import { FaRegEdit } from "react-icons/fa";
 import { FaMagnifyingGlass, FaTrashCan } from "react-icons/fa6";
 import Swal from "sweetalert2";
-import { Link } from "react-router";
+
 
 const MyParcels = () => {
 
@@ -120,14 +120,14 @@ const MyParcels = () => {
                                 <td>
                                     {
                                       parcel.paymentStatus ==='paid'? 
-                                      <span className="text-green-500">Paid</span>
+                                      <span className="text-green-700 text-1xl font-bold">Paid</span>
                                       :
                                     
                                       <button onClick={()=>handlePayment(parcel)} className="btn hover:bg-purple-600"> Pay </button>
                                      
                                     }
                                 </td>
-                                <td>{parcel.receiverName}</td>
+                                <td></td>
 
                             </tr>)
                         }

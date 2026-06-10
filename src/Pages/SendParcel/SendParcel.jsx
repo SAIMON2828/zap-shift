@@ -1,22 +1,22 @@
 // import React from 'react';
 
 import { useForm, useWatch } from "react-hook-form";
-import { useLoaderData } from "react-router";
+import { useLoaderData, useNavigate } from "react-router";
 import Swal from "sweetalert2";
 import useAxiosSecur from "../../Hookes/useAxiosSecur";
 import useAuth from "../../Hookes/useAuth";
 
 const SendParcel = () => {
-    const { 
-        register, 
-        handleSubmit, 
-        control, 
+    const {
+        register,
+        handleSubmit,
+        control,
         // formState: { errors }
-     } = useForm();
+    } = useForm();
 
-     const { user } = useAuth();
-     
-     const axiosSecure = useAxiosSecur();
+    const { user } = useAuth();
+    const navigate = useNavigate();
+    const axiosSecure = useAxiosSecur();
 
 
     const serviceCenters = useLoaderData();
@@ -64,30 +64,34 @@ const SendParcel = () => {
 
         Swal.fire({
             title: "Agree with the cost?",
-            text:`You will be charged ${cost} taka only !`,
+            text: `You will be charged ${cost} taka only !`,
             icon: "warning",
             showCancelButton: true,
             confirmButtonColor: "#3085d6",
             cancelButtonColor: "#d33",
-            confirmButtonText: "I agree"
+            confirmButtonText: "Confirm and Continue Payment"
         }).then((result) => {
             if (result.isConfirmed) {
 
                 // save the parcel info to the database
                 axiosSecure.post('/parcels', data)
-                .then( res => {
-                    console.log('After saving parcel', res.data);
-                })
+                    .then(res => {
+                        console.log('After saving parcel', res.data);
+                        if (res.data.insertedId) {
+                            navigate('/dashboard/my-parcels')
+                            Swal.fire({
+                                position: "top-end",
+                                icon: "success",
+                                title: "Parcel has created. Please Pay",
+                                showConfirmButton: false,
+                                timer: 2500
+                            });
+                        }
+                    })
 
-
-             //     Swal.fire({
-            //     title: "Cancel!",
-            //     text: "Your order has been canceled.",
-            //     icon: "success"
-            // });
             }
 
-           
+
         });
     }
     return (
@@ -132,15 +136,15 @@ const SendParcel = () => {
                         <h4 className="text-2xl font-semibold">Sender Details</h4>
                         {/* sender name */}
                         <label className="label">Sender Name</label>
-                        <input type="text" {...register('senderName')} 
-                        defaultValue={user?.displayName}
-                        className="input w-full" placeholder="Sender Name" />
+                        <input type="text" {...register('senderName')}
+                            defaultValue={user?.displayName}
+                            className="input w-full" placeholder="Sender Name" />
 
                         {/* sender email */}
                         <label className="label">Sender Email</label>
-                        <input type="text" {...register('senderEmail')} 
-                        defaultValue={user?.email}
-                        className="input w-full" placeholder="Sender Email" />
+                        <input type="text" {...register('senderEmail')}
+                            defaultValue={user?.email}
+                            className="input w-full" placeholder="Sender Email" />
 
                         {/* sender address */}
                         <label className="label mt-4">Sender Address</label>

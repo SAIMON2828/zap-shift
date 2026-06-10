@@ -2,6 +2,7 @@
 
 import { Link, NavLink, Outlet } from "react-router";
 import { VscPackage } from "react-icons/vsc";
+import { RiSecurePaymentFill } from "react-icons/ri";
 
 const DashBoardLayOut = () => {
     return (
@@ -39,6 +40,10 @@ const DashBoardLayOut = () => {
                         <li>
                             <NavLink to='/dashboard/my-parcels'>
                             <VscPackage /> My Parcels</NavLink>
+                        </li>
+                        <li>
+                            <NavLink to='/dashboard/payment-history'>
+                            <RiSecurePaymentFill /> My Payment History</NavLink>
                         </li>
                         {/* List item */}
                         <li>
