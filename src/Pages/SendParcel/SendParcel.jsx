@@ -235,7 +235,7 @@ const SendParcel = () => {
                     </fieldset>
                 </div>
 
-
+        
                 <input type="submit" value="Send parcel" className="btn btn-primary text-black mt-5" />
             </form>
         </div>

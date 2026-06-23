@@ -5,6 +5,7 @@ import useAuth from "../../../Hookes/useAuth";
 import { Link, useLocation, useNavigate } from "react-router";
 import SocialLogin from "../SocialLogin/SocialLogin";
 import axios from "axios";
+import useAxiosSecur from "../../../Hookes/useAxiosSecur";
 // import { updateProfile } from "firebase/auth";
 
 
@@ -14,16 +15,17 @@ const Register = () => {
     const {registerUser, updateUserProfile} = useAuth();
     const location = useLocation();
     const navigate = useNavigate();
+    const axiosSecure = useAxiosSecur();
 
     const handleregistration = (data) =>{
-          console.log('after register', data.photo[0]);
+          
 
 
           const profileImg = data.photo[0];
 
           registerUser(data.email, data.password)
-          .then(result=>{
-            console.log(result.user);
+          .then(()=>{
+            
             // store the image and get the photo url 
             const formData = new FormData();
             formData.append('image', profileImg);
@@ -31,12 +33,27 @@ const Register = () => {
             const image_API_URL = `https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_image_host_key}`
             axios.post(image_API_URL, formData)
             .then(res =>{
-                console.log('after image upload', res.data.data.url)
+                const photoURL = res.data.data.url
+
+
+                // create user in the database
+                const userInfo = {
+                    email: data.email,
+                    name: data.name,
+                    photoUrl: photoURL
+                }
+                 axiosSecure.post('/users', userInfo)
+                 .then(res =>{
+                    if(res.data.insertedId){
+                        console.log('user created in the database');
+                    }
+                 })
+
                 // update user profile
 
                 const userProfile = {
                     displayName : Date.name,
-                    photoUrl : res.data.data.url
+                    photoUrl :photoURL
                 }
                 updateUserProfile(userProfile)
                 .then( ()=>{

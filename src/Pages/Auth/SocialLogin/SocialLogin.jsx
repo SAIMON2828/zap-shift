@@ -2,22 +2,39 @@
 
 import { useLocation, useNavigate } from "react-router";
 import useAuth from "../../../Hookes/useAuth";
+import useAxiosSecur from "../../../Hookes/useAxiosSecur";
 
 const SocialLogin = () => {
 
-    const {signInGooggle} = useAuth();
+    const { signInGooggle } = useAuth();
     const location = useLocation();
     const navigate = useNavigate();
+    const axiosSecure = useAxiosSecur();
 
-    const handleGooogleSignIn = () =>{
+    const handleGooogleSignIn = () => {
         signInGooggle()
-        .then(result=>{
-            console.log(result.user);
-            navigate(location.state || '/');
-        })
-        .catch(error=>{
-            console.log(error)
-        })
+            .then(result => {
+                console.log(result.user);
+
+
+                // create user in the database
+                const userInfo = {
+                    email: result.user.email,
+                    name: result.user.displayName,
+                    photoUrl: result.user.photoURL
+                }
+
+                axiosSecure.post('/users', userInfo)
+                    .then(res => {
+                        console.log('User data has been stored', res.data);
+                        navigate(location.state || '/');
+                    })
+
+
+            })
+            .catch(error => {
+                console.log(error)
+            })
     }
     return (
         <div className="text-center mb-5">

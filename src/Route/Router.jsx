@@ -19,55 +19,56 @@ import PaymentHistory from "../Pages/DashBoard/PaymentHistory/PaymentHistory";
 export const router = createBrowserRouter([
   {
     path: "/",
-    Component:RootLayOut,
-    children:[
-        {
-            index: true,
-            Component: Home
-        },
-        {
-          path:'rider',
-          element: <PrivateRoute>
-            <Rider></Rider>
-          </PrivateRoute>
+    Component: RootLayOut,
+    children: [
+      {
+        index: true,
+        Component: Home
+      },
+      {
+        path: 'rider',
+        element: <PrivateRoute>
+          <Rider></Rider>
+        </PrivateRoute>,
+        loader: () => fetch('/serviceCenters.json').then(res => res.json())
 
-        },
-        {
-          path:'send-parcel',
-          element: <PrivateRoute>
-            <SendParcel></SendParcel>
-          </PrivateRoute>,
-          loader:()=>fetch('/serviceCenters.json').then(res=>res.json())
-        },
-        {
-          path:'coverage',
-          Component: Coverage,
-          loader:()=>fetch('/serviceCenters.json').then(res=>res.json())
-        }
+      },
+      {
+        path: 'send-parcel',
+        element: <PrivateRoute>
+          <SendParcel></SendParcel>
+        </PrivateRoute>,
+        loader: () => fetch('/serviceCenters.json').then(res => res.json())
+      },
+      {
+        path: 'coverage',
+        Component: Coverage,
+        loader: () => fetch('/serviceCenters.json').then(res => res.json())
+      }
     ]
   },
   {
-    path:'/',
+    path: '/',
     Component: AuthLayOut,
-    children:[
+    children: [
       {
-        path:'login',
+        path: 'login',
         Component: Login,
       },
       {
-        path:'register',
+        path: 'register',
         Component: Register,
       },
       {
-        path:'forgetPassword',
+        path: 'forgetPassword',
         Component: ForgetPassword,
       },
     ]
   },
   {
-    path:'dashboard',
+    path: 'dashboard',
     element: <PrivateRoute><DashBoardLayOut></DashBoardLayOut></PrivateRoute>,
-    children:[
+    children: [
       {
         path: 'my-parcels',
         Component: MyParcels,
@@ -78,15 +79,15 @@ export const router = createBrowserRouter([
 
       },
       {
-       path: 'payment-success',
-       Component: PaymentSuccess, 
+        path: 'payment-success',
+        Component: PaymentSuccess,
       },
       {
-        path:'payment-cancelled',
+        path: 'payment-cancelled',
         Component: PaymentCancelled,
       },
       {
-        path:'payment-history',
+        path: 'payment-history',
         Component: PaymentHistory,
       }
     ]
